@@ -9,6 +9,7 @@
 import UIKit
 import FontAwesome
 import ColorSlider
+import Photos
 
 class ViewController: UIViewController {
     
@@ -27,6 +28,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var undoButton: UIButton!
     @IBOutlet weak var colorButton: UIButton!
     @IBOutlet weak var clothingButton: UIButton!
+    @IBOutlet weak var saveButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -144,6 +146,40 @@ class ViewController: UIViewController {
         endedChange(slider)
     }
     
+    @IBAction func save(_ sender: Any) {
+        // Convert canvas (UIView) to UIImage
+        let renderer = UIGraphicsImageRenderer(size: canvas.bounds.size)
+        let image = renderer.image { ctx in
+            canvas.drawHierarchy(in: canvas.bounds, afterScreenUpdates: true)
+        }
+        
+        // Save to Photos
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(savedToPhotos(_: error: contextInfo:)), nil)
+        
+    }
+    
+    @objc func savedToPhotos(_ image: UIImage, error: NSError?, contextInfo: UnsafeRawPointer) {
+        // If we don't have permission to add to the user's photos
+        if error != nil {
+            // Create the alert
+            let alertController = UIAlertController(title: "We don't have permission.", message: "If you've changed your mind, please go to Settings below, select \"Photos,\" and tap \"Add Photos Only.\"", preferredStyle: .alert)
+            
+            // Create the "go to settings" action
+            let settingsAction = UIAlertAction(title: "Settings", style: .default) { (alertAction) in
+                if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
+                    UIApplication.shared.open(appSettings)
+                }
+            }
+            
+            // Add the actions to the alert
+            alertController.addAction(settingsAction)
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            
+            // Display the alert
+            present(alertController, animated: true)
+        }
+    }
+    
     func beganChange() {
         // Add the cover to the screen
         view.addSubview(coverView)
@@ -178,13 +214,14 @@ class ViewController: UIViewController {
     
     func initComponents() {
         // Set various button properties
-        let buttonCornerRadius = CGFloat(20)
+        let buttonCornerRadius = CGFloat(18)
         let buttonBorderWidth = CGFloat(1)
         let buttonBorderColor = UIColor.black.cgColor
-        let buttonScaleFactor = CGFloat(0.8)
+        let buttonScaleFactor = CGFloat(0.85)
+        let buttonFontSize = CGFloat(26)
         
         // The button that allows the user to clear all of his/her previous strokes
-        clearButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 30, style: .solid)
+        clearButton.titleLabel?.font = UIFont.fontAwesome(ofSize: buttonFontSize, style: .solid)
         clearButton.setTitle(String.fontAwesomeIcon(name: .trash), for: .normal)
         clearButton.setTitleColor(UIColor.black, for: .normal)
         clearButton.backgroundColor = .clear
@@ -194,7 +231,7 @@ class ViewController: UIViewController {
         clearButton.transform = CGAffineTransform(scaleX: buttonScaleFactor, y: buttonScaleFactor)
         
         // The button that allows the user to undo his/her previous stroke
-        undoButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 30, style: .solid)
+        undoButton.titleLabel?.font = UIFont.fontAwesome(ofSize: buttonFontSize, style: .solid)
         undoButton.setTitle(String.fontAwesomeIcon(name: .undo), for: .normal)
         undoButton.setTitleColor(UIColor.black, for: .normal)
         undoButton.backgroundColor = .clear
@@ -204,7 +241,7 @@ class ViewController: UIViewController {
         undoButton.transform = CGAffineTransform(scaleX: buttonScaleFactor, y: buttonScaleFactor)
         
         // The button that allows the user to change the color of the lines that he/she can draw
-        colorButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 30, style: .solid)
+        colorButton.titleLabel?.font = UIFont.fontAwesome(ofSize: buttonFontSize, style: .solid)
         colorButton.setTitle(String.fontAwesomeIcon(name: .paintBrush), for: .normal)
         colorButton.setTitleColor(UIColor.black, for: .normal)
         colorButton.backgroundColor = .clear
@@ -214,7 +251,7 @@ class ViewController: UIViewController {
         colorButton.transform = CGAffineTransform(scaleX: buttonScaleFactor, y: buttonScaleFactor)
         
         // The button that allows the user to choose different clothing
-        clothingButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 30, style: .solid)
+        clothingButton.titleLabel?.font = UIFont.fontAwesome(ofSize: buttonFontSize, style: .solid)
         clothingButton.setTitle(String.fontAwesomeIcon(name: .tshirt), for: .normal)
         clothingButton.setTitleColor(UIColor.black, for: .normal)
         clothingButton.backgroundColor = .clear
@@ -222,6 +259,16 @@ class ViewController: UIViewController {
         clothingButton.layer.borderWidth = buttonBorderWidth
         clothingButton.layer.borderColor = buttonBorderColor
         clothingButton.transform = CGAffineTransform(scaleX: buttonScaleFactor, y: buttonScaleFactor)
+        
+        // The button that allows the user to save his/her piece to photos
+        saveButton.titleLabel?.font = UIFont.fontAwesome(ofSize: buttonFontSize, style: .solid)
+        saveButton.setTitle(String.fontAwesomeIcon(name: .download), for: .normal)
+        saveButton.setTitleColor(UIColor.black, for: .normal)
+        saveButton.backgroundColor = .clear
+        saveButton.layer.cornerRadius = buttonCornerRadius
+        saveButton.layer.borderWidth = buttonBorderWidth
+        saveButton.layer.borderColor = buttonBorderColor
+        saveButton.transform = CGAffineTransform(scaleX: buttonScaleFactor, y: buttonScaleFactor)
         
         // The cover view that covers up the base screen when the user is changing something
         coverView = UIView(frame: CGRect(x: 0, y: 0, width: phoneWidth, height: phoneHeight))

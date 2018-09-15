@@ -19,39 +19,46 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="NaP-BB-h2Z">
-                                <rect key="frame" x="0.0" y="587" width="375" height="80"/>
+                                <rect key="frame" x="0.0" y="599" width="375" height="68"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jRa-xa-7FM">
-                                        <rect key="frame" x="0.0" y="0.0" width="94" height="80"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="75" height="68"/>
                                         <state key="normal" title="Button"/>
                                         <connections>
                                             <action selector="changeColor:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xqU-03-MAf"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uRo-uW-5NI">
-                                        <rect key="frame" x="94" y="0.0" width="93.5" height="80"/>
+                                        <rect key="frame" x="75" y="0.0" width="75" height="68"/>
                                         <state key="normal" title="Button"/>
                                         <connections>
                                             <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iJx-9f-9d8"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cKo-SB-BNh">
-                                        <rect key="frame" x="187.5" y="0.0" width="94" height="80"/>
+                                        <rect key="frame" x="150" y="0.0" width="75" height="68"/>
                                         <state key="normal" title="Button"/>
                                         <connections>
                                             <action selector="clear:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SGp-4i-T3A"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pkf-jw-gTn">
-                                        <rect key="frame" x="281.5" y="0.0" width="93.5" height="80"/>
+                                        <rect key="frame" x="225" y="0.0" width="75" height="68"/>
                                         <state key="normal" title="Button"/>
                                         <connections>
                                             <action selector="changeClothes:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Zrx-1R-uHx"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DX2-9n-79I">
+                                        <rect key="frame" x="300" y="0.0" width="75" height="68"/>
+                                        <state key="normal" title="Button"/>
+                                        <connections>
+                                            <action selector="save:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FPv-RF-Ptz"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="f0G-xd-xVq"/>
+                                    <constraint firstAttribute="height" constant="68" id="ZEl-ef-aGV"/>
                                 </constraints>
                             </stackView>
                         </subviews>
@@ -67,6 +74,7 @@
                         <outlet property="clearButton" destination="cKo-SB-BNh" id="hu4-Xq-WlG"/>
                         <outlet property="clothingButton" destination="Pkf-jw-gTn" id="VpQ-Hf-Rc7"/>
                         <outlet property="colorButton" destination="jRa-xa-7FM" id="GwW-09-5om"/>
+                        <outlet property="saveButton" destination="DX2-9n-79I" id="oUM-dd-wX5"/>
                         <outlet property="undoButton" destination="uRo-uW-5NI" id="CK4-kL-5AN"/>
                     </connections>
                 </viewController>
