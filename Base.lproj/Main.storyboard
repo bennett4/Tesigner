@@ -28,18 +28,18 @@
                                             <action selector="changeColor:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xqU-03-MAf"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cKo-SB-BNh">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uRo-uW-5NI">
                                         <rect key="frame" x="94" y="0.0" width="93.5" height="80"/>
                                         <state key="normal" title="Button"/>
                                         <connections>
-                                            <action selector="clear:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SGp-4i-T3A"/>
+                                            <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iJx-9f-9d8"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uRo-uW-5NI">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cKo-SB-BNh">
                                         <rect key="frame" x="187.5" y="0.0" width="94" height="80"/>
                                         <state key="normal" title="Button"/>
                                         <connections>
-                                            <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iJx-9f-9d8"/>
+                                            <action selector="clear:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SGp-4i-T3A"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pkf-jw-gTn">
