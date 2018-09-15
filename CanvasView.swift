@@ -24,6 +24,22 @@ class CanvasView: UIView, NSCopying {
         self.isMultipleTouchEnabled = false
     }
     
+    override func draw(_ rect: CGRect) {
+        // Draw white background
+        let width = self.bounds.size.width
+        let height = self.bounds.size.height
+        
+        let background = UIBezierPath()
+        background.move(to: CGPoint(x: 0, y: 0))
+        background.addLine(to: CGPoint(x: width, y: 0))
+        background.addLine(to: CGPoint(x: width, y: height))
+        background.addLine(to: CGPoint(x: 0, y: height))
+        background.addLine(to: CGPoint(x: 0, y: 0))
+        
+        UIColor.white.set()
+        background.fill()
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first
         startingPoint = touch?.location(in: self)

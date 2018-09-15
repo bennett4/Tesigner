@@ -20,6 +20,9 @@ class LongSleeve: CanvasView {
     }
     
     override func draw(_ rect: CGRect) {
+        // Draw background
+        super.draw(rect)
+        
         // Get Dimensions
         let width = self.bounds.size.width
         let height = self.bounds.size.height
