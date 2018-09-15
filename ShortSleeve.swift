@@ -56,6 +56,13 @@ class ShortSleeve: CanvasView {
         path.addCurve(to: rightNeck, controlPoint1: rightShoulder, controlPoint2: rightShoulder)
         path.addCurve(to: leftNeck, controlPoint1: neckRightControlPoint, controlPoint2: neckLeftControlPoint)
         
+        // Fill
+        if (fillColor == nil) {
+            fillColor = UIColor.white
+        }
+        fillColor.set()
+        path.fill()
+        
         // Stroke
         UIColor.black.set()
         path.lineWidth = 2

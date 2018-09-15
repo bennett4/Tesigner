@@ -11,6 +11,7 @@ import UIKit
 class CanvasView: UIView, NSCopying {
     
     var lineColor = UIColor.black
+    var fillColor: UIColor!
     var lineWidth = 4
     var path: UIBezierPath!
     var touchPoint: CGPoint!

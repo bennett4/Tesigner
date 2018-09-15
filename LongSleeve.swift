@@ -60,6 +60,13 @@ class LongSleeve: CanvasView {
         path.addCurve(to: rightNeck, controlPoint1: rightShoulderControlPoint1, controlPoint2: rightShoulderControlPoint2)
         path.addCurve(to: leftNeck, controlPoint1: neckRightControlPoint, controlPoint2: neckLeftControlPoint)
         
+        // Fill
+        if (fillColor == nil) {
+            fillColor = UIColor.white
+        }
+        fillColor.set()
+        path.fill()
+        
         // Stroke
         UIColor.black.set()
         path.lineWidth = 2

@@ -20,8 +20,8 @@ class ViewController: UIViewController {
     var canvas: CanvasView!
     var clothingOptions = [CanvasView]()
     var optionsGestureRecognizers = [UILongPressGestureRecognizer]()
-    var colorSlider: ColorSlider!
-    var color: UIColor!
+    var lineColorSlider: ColorSlider!
+    var fillColorSlider: ColorSlider!
     
     @IBOutlet weak var clearButton: UIButton!
     @IBOutlet weak var undoButton: UIButton!
@@ -52,15 +52,17 @@ class ViewController: UIViewController {
     }
 
     @IBAction func clear(_ sender: Any) {
+        // Clear all previous strokes
         canvas.clear()
     }
     
     @IBAction func undo(_ sender: Any) {
+        // Undo the previous stroke
         canvas.undo()
     }
     
     @IBAction func changeClothes(_ sender: Any) {
-        // Add cover view
+        // Add the cover to the screen
         beganChange()
         
         // Add clothing options to the screen
@@ -71,7 +73,7 @@ class ViewController: UIViewController {
     }
     
     @objc func pickedOutClothes(_ sender: UIView) {
-        // Find index of selected clothing option
+        // Get index of selected clothing option
         var index: Int!
         for i in 0...(clothingOptions.count - 1) {
             if (optionsGestureRecognizers[i] == sender) {
@@ -79,17 +81,45 @@ class ViewController: UIViewController {
             }
         }
         
+        // Remove the clothing options from the screen
+        for i in 0...(clothingOptions.count - 1) {
+            clothingOptions[i].removeFromSuperview()
+            clothingOptions[i].removeGestureRecognizer(optionsGestureRecognizers[i])
+        }
+        
+        // Add the cover to the screen
+        beganChange()
+        
+        // Add color picker to the screen
+        view.addSubview(fillColorSlider)
+        fillColorSlider.addTarget(self, action: #selector(ViewController.selectedClothingColor(_:)), for: .touchUpOutside)
+        fillColorSlider.addTarget(self, action: #selector(ViewController.selectedClothingColor(_:)), for: .touchUpInside)
+        fillColorSlider.tag = index
+    }
+    
+    @objc func selectedClothingColor(_ slider: ColorSlider) {
+        // Set fill color and clean up
+        let fillColor = slider.color
+        fillColorSlider.removeTarget(self, action: #selector(ViewController.selectedClothingColor(_:)), for: .touchUpOutside)
+        fillColorSlider.removeTarget(self, action: #selector(ViewController.selectedClothingColor(_:)), for: .touchUpInside)
+        fillColorSlider.removeFromSuperview()
+        endedChange(slider)
+        displayNewClothing(indexOfSelectedClothing: slider.tag, color: fillColor)
+    }
+    
+    func displayNewClothing(indexOfSelectedClothing: Int, color: UIColor) {
         // Remove previous clothing canvas
         let currentColor = canvas.lineColor
         canvas.removeFromSuperview()
         
         // Set new canvas to be the selected option
-        canvas = clothingOptions[index].copy() as! CanvasView
+        canvas = clothingOptions[indexOfSelectedClothing].copy() as! CanvasView
         canvas.frame = canvasBounds
         canvas.lineColor = currentColor
+        canvas.fillColor = color
         
         // Remove cover view
-        endedChange(sender)
+        endedChange(UIView())
         
         // Add the selected clothing to the canvas
         view.addSubview(canvas)
@@ -100,31 +130,32 @@ class ViewController: UIViewController {
         beganChange()
         
         // Add color picker to the screen
-        view.addSubview(colorSlider)
-        colorSlider.addTarget(self, action: #selector(ViewController.changedColor(_:)), for: .touchUpOutside)
-        colorSlider.addTarget(self, action: #selector(ViewController.changedColor(_:)), for: .touchUpInside)
+        view.addSubview(lineColorSlider)
+        lineColorSlider.addTarget(self, action: #selector(ViewController.changedColor(_:)), for: .touchUpOutside)
+        lineColorSlider.addTarget(self, action: #selector(ViewController.changedColor(_:)), for: .touchUpInside)
     }
     
     @objc func changedColor(_ slider: ColorSlider) {
         // Set new line color and clean up
         canvas.lineColor = slider.color
-        colorSlider.removeTarget(self, action: #selector(ViewController.changedColor(_:)), for: .touchUpOutside)
-        colorSlider.removeTarget(self, action: #selector(ViewController.changedColor(_:)), for: .touchUpInside)
-        colorSlider.removeFromSuperview()
+        lineColorSlider.removeTarget(self, action: #selector(ViewController.changedColor(_:)), for: .touchUpOutside)
+        lineColorSlider.removeTarget(self, action: #selector(ViewController.changedColor(_:)), for: .touchUpInside)
+        lineColorSlider.removeFromSuperview()
         endedChange(slider)
     }
     
     func beganChange() {
+        // Add the cover to the screen
         view.addSubview(coverView)
         coverView.addGestureRecognizer(closedCoverView)
     }
     
     @objc func endedChange(_ sender: UIView) {
-        if (colorSlider.superview != nil) {
+        if (lineColorSlider.superview != nil) {
             // If a new color was not selected, remove color selector from screen
-            colorSlider.removeTarget(self, action: #selector(ViewController.changedColor(_:)), for: .touchUpOutside)
-            colorSlider.removeTarget(self, action: #selector(ViewController.changedColor(_:)), for: .touchUpInside)
-            colorSlider.removeFromSuperview()
+            lineColorSlider.removeTarget(self, action: #selector(ViewController.changedColor(_:)), for: .touchUpOutside)
+            lineColorSlider.removeTarget(self, action: #selector(ViewController.changedColor(_:)), for: .touchUpInside)
+            lineColorSlider.removeFromSuperview()
         }
         else if (clothingOptions[0].superview != nil) {
             // If a new clothing option was not selected, remove all clothing options from screen
@@ -133,6 +164,12 @@ class ViewController: UIViewController {
                 clothingOptions[i].removeGestureRecognizer(optionsGestureRecognizers[i])
             }
         }
+        else if (fillColorSlider.superview != nil) {
+            // If a new color was not selected, remove color selector and clothing choices from screen
+            fillColorSlider.removeTarget(self, action: #selector(ViewController.selectedClothingColor(_:)), for: .touchUpOutside)
+            fillColorSlider.removeTarget(self, action: #selector(ViewController.selectedClothingColor(_:)), for: .touchUpInside)
+            fillColorSlider.removeFromSuperview()
+        }
         
         // Remove cover view
         coverView.removeGestureRecognizer(closedCoverView)
@@ -140,11 +177,13 @@ class ViewController: UIViewController {
     }
     
     func initComponents() {
+        // Set various button properties
         let buttonCornerRadius = CGFloat(20)
         let buttonBorderWidth = CGFloat(1)
         let buttonBorderColor = UIColor.black.cgColor
         let buttonScaleFactor = CGFloat(0.8)
         
+        // The button that allows the user to clear all of his/her previous strokes
         clearButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 30, style: .solid)
         clearButton.setTitle(String.fontAwesomeIcon(name: .trash), for: .normal)
         clearButton.setTitleColor(UIColor.black, for: .normal)
@@ -154,6 +193,7 @@ class ViewController: UIViewController {
         clearButton.layer.borderColor = buttonBorderColor
         clearButton.transform = CGAffineTransform(scaleX: buttonScaleFactor, y: buttonScaleFactor)
         
+        // The button that allows the user to undo his/her previous stroke
         undoButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 30, style: .solid)
         undoButton.setTitle(String.fontAwesomeIcon(name: .undo), for: .normal)
         undoButton.setTitleColor(UIColor.black, for: .normal)
@@ -163,6 +203,7 @@ class ViewController: UIViewController {
         undoButton.layer.borderColor = buttonBorderColor
         undoButton.transform = CGAffineTransform(scaleX: buttonScaleFactor, y: buttonScaleFactor)
         
+        // The button that allows the user to change the color of the lines that he/she can draw
         colorButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 30, style: .solid)
         colorButton.setTitle(String.fontAwesomeIcon(name: .paintBrush), for: .normal)
         colorButton.setTitleColor(UIColor.black, for: .normal)
@@ -172,6 +213,7 @@ class ViewController: UIViewController {
         colorButton.layer.borderColor = buttonBorderColor
         colorButton.transform = CGAffineTransform(scaleX: buttonScaleFactor, y: buttonScaleFactor)
         
+        // The button that allows the user to choose different clothing
         clothingButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 30, style: .solid)
         clothingButton.setTitle(String.fontAwesomeIcon(name: .tshirt), for: .normal)
         clothingButton.setTitleColor(UIColor.black, for: .normal)
@@ -181,32 +223,44 @@ class ViewController: UIViewController {
         clothingButton.layer.borderColor = buttonBorderColor
         clothingButton.transform = CGAffineTransform(scaleX: buttonScaleFactor, y: buttonScaleFactor)
         
+        // The cover view that covers up the base screen when the user is changing something
         coverView = UIView(frame: CGRect(x: 0, y: 0, width: phoneWidth, height: phoneHeight))
         coverView.backgroundColor = UIColor.white
         closedCoverView = UITapGestureRecognizer(target: self, action: #selector(self.endedChange(_:)))
         
-        colorSlider = ColorSlider(orientation: .horizontal, previewSide: .top)
-        let sliderWidth = phoneWidth * 0.75
-        let sliderHeight = phoneHeight * 0.04
-        colorSlider.frame = CGRect(x: ((phoneWidth / 2) - ((sliderWidth) / 2)), y: ((phoneHeight / 2) - ((sliderHeight) / 2)), width: sliderWidth, height: sliderHeight)
+        // The slider that decides the color of the lines that the user can draw
+        lineColorSlider = ColorSlider(orientation: .horizontal, previewSide: .top)
+        let lineSliderWidth = phoneWidth * 0.75
+        let lineSliderHeight = phoneHeight * 0.04
+        lineColorSlider.frame = CGRect(x: ((phoneWidth / 2) - ((lineSliderWidth) / 2)), y: ((phoneHeight / 2) - ((lineSliderHeight) / 2)), width: lineSliderWidth, height: lineSliderHeight)
         
+        // The slider that decides the fill color of the clothing
+        fillColorSlider = ColorSlider(orientation: .horizontal, previewSide: .top)
+        let fillSliderWidth = phoneWidth * 0.75
+        let fillSliderHeight = phoneHeight * 0.04
+        fillColorSlider.frame = CGRect(x: ((phoneWidth / 2) - ((fillSliderWidth) / 2)), y: ((phoneHeight / 2) - ((fillSliderHeight) / 2)), width: fillSliderWidth, height: fillSliderHeight)
+        
+        // Initialize the clothing options menu
         initOptions()
     }
     
     func initOptions() {
+        // Add available clothing options to choose from
         clothingOptions.append(ShortSleeve())
         clothingOptions.append(LongSleeve())
         
+        // Choose the percent of the screen that the options will take up when selecting new clothing
         let percentOfContent = CGFloat(0.8)
         let percentOfSpacing = 1 - percentOfContent
-        
         let optionWidth = (phoneWidth * percentOfContent) / CGFloat(clothingOptions.count)
         let spacingWidth = (phoneWidth * percentOfSpacing) / CGFloat(clothingOptions.count + 1)
         
+        // Set the frame (width/height/over/down) for the clothing options
         for i in 0...(clothingOptions.count - 1) {
             clothingOptions[i].frame = CGRect(x: (CGFloat(i) * optionWidth) + (CGFloat(i + 1) * spacingWidth), y: (phoneHeight / 2) - (optionWidth / 2), width: optionWidth, height: optionWidth)
         }
         
+        // Add gesture recognizers for the clothing options when choosing a new piece of clothing
         for i in 0...(clothingOptions.count - 1) {
             optionsGestureRecognizers.append(UILongPressGestureRecognizer(target: self, action: #selector(self.pickedOutClothes(_:))))
             optionsGestureRecognizers[i].minimumPressDuration = 0
