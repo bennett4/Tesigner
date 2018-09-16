@@ -162,18 +162,25 @@ class ViewController: UIViewController {
         // If we don't have permission to add to the user's photos
         if error != nil {
             // Create the alert
-            let alertController = UIAlertController(title: "We don't have permission.", message: "If you've changed your mind, please go to Settings below, select \"Photos,\" and tap \"Add Photos Only.\"", preferredStyle: .alert)
+            let title = NSLocalizedString("noPermissionTitle", comment: "Title of dialog box when saving without permission")
+            let message = NSLocalizedString("noPermissionDescription", comment: "Description of dialog box when saving without permission")
+            let alertController = UIAlertController(title: title + ".", message: message, preferredStyle: .alert)
             
-            // Create the "go to settings" action
-            let settingsAction = UIAlertAction(title: "Settings", style: .default) { (alertAction) in
+            // Create the Settings action
+            let settingsString = NSLocalizedString("settings", comment: "Settings")
+            let settingsAction = UIAlertAction(title: settingsString, style: .default) { (alertAction) in
                 if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
                     UIApplication.shared.open(appSettings)
                 }
             }
             
+            // Create the Cancel action
+            let cancelString = NSLocalizedString("cancel", comment: "Cancel")
+            let cancelAction = UIAlertAction(title: cancelString, style: .cancel)
+            
             // Add the actions to the alert
             alertController.addAction(settingsAction)
-            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            alertController.addAction(cancelAction)
             
             // Display the alert
             present(alertController, animated: true)

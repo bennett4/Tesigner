@@ -23,35 +23,30 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jRa-xa-7FM">
                                         <rect key="frame" x="0.0" y="0.0" width="75" height="68"/>
-                                        <state key="normal" title="Button"/>
                                         <connections>
                                             <action selector="changeColor:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xqU-03-MAf"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uRo-uW-5NI">
                                         <rect key="frame" x="75" y="0.0" width="75" height="68"/>
-                                        <state key="normal" title="Button"/>
                                         <connections>
                                             <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iJx-9f-9d8"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cKo-SB-BNh">
                                         <rect key="frame" x="150" y="0.0" width="75" height="68"/>
-                                        <state key="normal" title="Button"/>
                                         <connections>
                                             <action selector="clear:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SGp-4i-T3A"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pkf-jw-gTn">
                                         <rect key="frame" x="225" y="0.0" width="75" height="68"/>
-                                        <state key="normal" title="Button"/>
                                         <connections>
                                             <action selector="changeClothes:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Zrx-1R-uHx"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DX2-9n-79I">
                                         <rect key="frame" x="300" y="0.0" width="75" height="68"/>
-                                        <state key="normal" title="Button"/>
                                         <connections>
                                             <action selector="save:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FPv-RF-Ptz"/>
                                         </connections>

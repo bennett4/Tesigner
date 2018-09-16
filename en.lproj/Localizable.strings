@@ -1,0 +1,4 @@
+"settings" = "Settings";
+"cancel" = "Cancel";
+"noPermissionTitle" = "We don't have permission";
+"noPermissionDescription" = "If you've changed your mind, please go to Settings below, select \"Photos,\" and tap \"Add Photos Only.\"";
