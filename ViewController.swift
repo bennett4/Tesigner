@@ -19,8 +19,8 @@ class ViewController: UIViewController {
     var coverView: UIView!
     var closedCoverView: UIGestureRecognizer!
     var canvas: CanvasView!
-    var clothingOptions = [CanvasView]()
-    var optionsGestureRecognizers = [UILongPressGestureRecognizer]()
+    var clothingOptions = [[CanvasView]]()
+    var optionsGestureRecognizers = [[UILongPressGestureRecognizer]]()
     var lineColorSlider: ColorSlider!
     var fillColorSlider: ColorSlider!
     
@@ -69,8 +69,10 @@ class ViewController: UIViewController {
         
         // Add clothing options to the screen
         for i in 0...(clothingOptions.count - 1) {
-            view.addSubview(clothingOptions[i])
-            clothingOptions[i].addGestureRecognizer(optionsGestureRecognizers[i])
+            for j in 0...(clothingOptions[i].count - 1) {
+                view.addSubview(clothingOptions[i][j])
+                clothingOptions[i][j].addGestureRecognizer(optionsGestureRecognizers[i][j])
+            }
         }
     }
     
@@ -78,15 +80,20 @@ class ViewController: UIViewController {
         // Get index of selected clothing option
         var index: Int!
         for i in 0...(clothingOptions.count - 1) {
-            if (optionsGestureRecognizers[i] == sender) {
-                index = i
+            for j in 0...(clothingOptions[i].count - 1) {
+                if (optionsGestureRecognizers[i][j] == sender) {
+                    // Not my favorite approach
+                    index = (i * 1000) + j
+                }
             }
         }
         
         // Remove the clothing options from the screen
         for i in 0...(clothingOptions.count - 1) {
-            clothingOptions[i].removeFromSuperview()
-            clothingOptions[i].removeGestureRecognizer(optionsGestureRecognizers[i])
+            for j in 0...(clothingOptions[i].count - 1) {
+                clothingOptions[i][j].removeFromSuperview()
+                clothingOptions[i][j].removeGestureRecognizer(optionsGestureRecognizers[i][j])
+            }
         }
         
         // Add the cover to the screen
@@ -115,7 +122,9 @@ class ViewController: UIViewController {
         canvas.removeFromSuperview()
         
         // Set new canvas to be the selected option
-        canvas = clothingOptions[indexOfSelectedClothing].copy() as! CanvasView
+        let iIndex = indexOfSelectedClothing / 1000
+        let jIndex = indexOfSelectedClothing % 1000
+        canvas = clothingOptions[iIndex][jIndex].copy() as? CanvasView
         canvas.frame = canvasBounds
         canvas.lineColor = currentColor
         canvas.fillColor = color
@@ -200,11 +209,13 @@ class ViewController: UIViewController {
             lineColorSlider.removeTarget(self, action: #selector(ViewController.changedColor(_:)), for: .touchUpInside)
             lineColorSlider.removeFromSuperview()
         }
-        else if (clothingOptions[0].superview != nil) {
+        else if (clothingOptions[0][0].superview != nil) {
             // If a new clothing option was not selected, remove all clothing options from screen
             for i in 0...(clothingOptions.count - 1) {
-                clothingOptions[i].removeFromSuperview()
-                clothingOptions[i].removeGestureRecognizer(optionsGestureRecognizers[i])
+                for j in 0...(clothingOptions[i].count - 1) {
+                    clothingOptions[i][j].removeFromSuperview()
+                    clothingOptions[i][j].removeGestureRecognizer(optionsGestureRecognizers[i][j])
+                }
             }
         }
         else if (fillColorSlider.superview != nil) {
@@ -300,24 +311,33 @@ class ViewController: UIViewController {
     
     func initOptions() {
         // Add available clothing options to choose from
-        clothingOptions.append(ShortSleeve())
-        clothingOptions.append(LongSleeve())
+        clothingOptions = [[ShortSleeve(), LongSleeve()]]
         
         // Choose the percent of the screen that the options will take up when selecting new clothing
         let percentOfContent = CGFloat(0.8)
         let percentOfSpacing = 1 - percentOfContent
-        let optionWidth = (phoneWidth * percentOfContent) / CGFloat(clothingOptions.count)
-        let spacingWidth = (phoneWidth * percentOfSpacing) / CGFloat(clothingOptions.count + 1)
+        let optionWidth = (phoneWidth * percentOfContent) / CGFloat(clothingOptions[0].count)
+        let spacingWidth = (phoneWidth * percentOfSpacing) / CGFloat(clothingOptions[0].count + 1)
         
         // Set the frame (width/height/over/down) for the clothing options
         for i in 0...(clothingOptions.count - 1) {
-            clothingOptions[i].frame = CGRect(x: (CGFloat(i) * optionWidth) + (CGFloat(i + 1) * spacingWidth), y: (phoneHeight / 2) - (optionWidth / 2), width: optionWidth, height: optionWidth)
+            let center = (phoneHeight / 2)
+            let contentHeight = (CGFloat(i) - (CGFloat(clothingOptions.count) / CGFloat(2)))
+            let spacingHeight = (CGFloat(i) - ((CGFloat(clothingOptions.count) / CGFloat(2)) - 0.5))
+            let down = center + (optionWidth * contentHeight) + (spacingWidth * spacingHeight)
+            for j in 0...(clothingOptions[i].count - 1) {
+                let over = (CGFloat(j) * optionWidth) + (CGFloat(j + 1) * spacingWidth)
+                clothingOptions[i][j].frame = CGRect(x: over, y: down, width: optionWidth, height: optionWidth)
+            }
         }
         
         // Add gesture recognizers for the clothing options when choosing a new piece of clothing
         for i in 0...(clothingOptions.count - 1) {
-            optionsGestureRecognizers.append(UILongPressGestureRecognizer(target: self, action: #selector(self.pickedOutClothes(_:))))
-            optionsGestureRecognizers[i].minimumPressDuration = 0
+            optionsGestureRecognizers.append([])
+            for j in 0...(clothingOptions[i].count - 1) {
+                optionsGestureRecognizers[i].append(UILongPressGestureRecognizer(target: self, action: #selector(self.pickedOutClothes(_:))))
+                optionsGestureRecognizers[i][j].minimumPressDuration = 0
+            }
         }
     }
     
