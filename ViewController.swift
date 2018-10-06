@@ -311,7 +311,8 @@ class ViewController: UIViewController {
     
     func initOptions() {
         // Add available clothing options to choose from
-        clothingOptions = [[ShortSleeve(), LongSleeve()]]
+        clothingOptions = [[ShortSleeve(), LongSleeve()],
+                           [Overalls(), Dress()]]
         
         // Choose the percent of the screen that the options will take up when selecting new clothing
         let percentOfContent = CGFloat(0.8)
